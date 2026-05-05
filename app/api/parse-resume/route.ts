@@ -33,12 +33,20 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
 
     if (fileName.endsWith(".pdf")) {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
-      const pdfParse = require("pdf-parse") as any;
-      const data = await pdfParse(buffer);
+      const PDFParser = require("pdf2json");
+      
+      const text = await new Promise<string>((resolve, reject) => {
+        const pdfParser = new PDFParser(null, 1);
+        pdfParser.on("pdfParser_dataError", (errData: any) => reject(errData.parserError));
+        pdfParser.on("pdfParser_dataReady", () => {
+          resolve(pdfParser.getRawTextContent());
+        });
+        pdfParser.parseBuffer(buffer);
+      });
+      
       return NextResponse.json({
-        html: `<p>${data.text.replace(/\n\n/g, "</p><p>").replace(/\n/g, "<br/>")}</p>`,
-        text: data.text,
+        html: `<p>${text.replace(/\r\n/g, "\n").replace(/\n\n/g, "</p><p>").replace(/\n/g, "<br/>")}</p>`,
+        text: text,
       });
     }
 

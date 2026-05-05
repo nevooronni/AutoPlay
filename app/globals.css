@@ -24,3 +24,9 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Quill Editor Overrides */
+.ql-editor.ql-blank::before {
+  color: #64748b !important; /* text-slate-500 */
+  font-style: normal !important;
+}
