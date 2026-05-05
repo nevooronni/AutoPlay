@@ -5,6 +5,7 @@ if (typeof global.DOMMatrix === 'undefined') {
     }
   };
 }
-
+const fs = require('fs');
+// Let's create a dummy pdf or try to run pdf-parse as a function
 const pdfParse = require('pdf-parse');
-console.log("pdfParse loaded:", typeof pdfParse);
+console.log(typeof pdfParse === 'function' ? 'function' : 'object');

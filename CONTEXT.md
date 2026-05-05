@@ -7,7 +7,7 @@ A job application tool called AutoApply. It takes in an Job description and a re
 ### User requirements
 user should be able to add JDs
 user should be able to add resumes
-user should be ablet to select which resume to use for a JD
+user should be able to select which resume to use for a JD
 user should be able to tweak added resume to jobs description resume should pass ATS scan filters 
 user should be able to get a cover letter returned from JD and resume
 user should be able to see a final review of resume, cover letter, application for email before prompting send or approving to send
