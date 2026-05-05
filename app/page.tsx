@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "@/components/logo";
 import {
   Zap,
   FileText,
@@ -14,9 +15,7 @@ export default function Home() {
       {/* Navigation */}
       <nav className="border-b border-slate-800/50 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-            AutoApply
-          </h1>
+          <Logo size="sm" />
           <div className="flex items-center gap-3">
             <Link
               href="/login"

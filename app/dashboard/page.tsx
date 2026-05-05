@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { signout } from "@/app/(auth)/actions";
-import { LogOut, Briefcase, FileText, LayoutDashboard } from "lucide-react";
+import { LogOut, Briefcase, FileText } from "lucide-react";
+import { Logo } from "@/components/logo";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -45,10 +46,7 @@ export default async function DashboardPage() {
       <header className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <LayoutDashboard className="h-5 w-5 text-indigo-400" />
-            <h1 className="text-lg font-semibold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-              AutoApply
-            </h1>
+            <Logo size="sm" />
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-slate-400">

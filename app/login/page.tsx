@@ -1,6 +1,8 @@
-import Link from "next/link";
 import { login } from "@/app/(auth)/actions";
+import { Logo } from "@/components/logo";
+import { SubmitButton } from "@/components/submit-button";
 import { Mail, Lock, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default async function LoginPage({
   searchParams,
@@ -13,14 +15,10 @@ export default async function LoginPage({
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 px-4">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-block">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-              AutoApply
-            </h1>
-          </Link>
-          <p className="text-slate-400 mt-2">Sign in to your account</p>
+        <div className="flex justify-center mb-8">
+          <Logo size="lg" />
         </div>
+        <p className="text-slate-400 text-center mb-8">Sign in to your account</p>
 
         {/* Card */}
         <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8 shadow-2xl">
@@ -30,7 +28,7 @@ export default async function LoginPage({
             </div>
           )}
 
-          <form className="space-y-5">
+          <form action={login} className="space-y-5">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1.5">
                 Email
@@ -65,13 +63,9 @@ export default async function LoginPage({
               </div>
             </div>
 
-            <button
-              formAction={login}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-medium rounded-xl transition-all duration-200 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 cursor-pointer"
-            >
+            <SubmitButton icon={<ArrowRight className="h-4 w-4" />}>
               Sign In
-              <ArrowRight className="h-4 w-4" />
-            </button>
+            </SubmitButton>
           </form>
 
           <div className="mt-6 text-center">
