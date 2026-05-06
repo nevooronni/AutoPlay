@@ -51,7 +51,7 @@ export default async function ResumesPage() {
                     <FileText className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white text-sm">
+                    <h3 className="font-semibold text-white text-sm mb-1">
                       {resume.title}
                     </h3>
                     <p className="text-xs text-slate-500">
@@ -81,7 +81,7 @@ export default async function ResumesPage() {
               {/* Actions */}
               <ResumeActions
                 resumeId={resume.id}
-                isDefault={resume.is_default}
+                isDefault={resume.is_default ?? false}
               />
             </div>
           ))}

@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FileText } from "lucide-react";
+import { LayoutDashboard, FileText, Briefcase } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/resumes", label: "Resumes", icon: FileText },
+  { href: "/dashboard/jobs", label: "Jobs", icon: Briefcase },
 ];
 
 export function DashboardNav() {

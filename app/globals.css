@@ -30,3 +30,27 @@ body {
   color: #64748b !important; /* text-slate-500 */
   font-style: normal !important;
 }
+
+/* Custom Scrollbar for Dark Theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155; /* slate-700 */
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569; /* slate-600 */
+}
+
+/* Force transparent background and inherit text color for pasted rich text */
+.job-description-content * {
+  background-color: transparent !important;
+}
+.job-description-content [style*="color"] {
+  color: inherit !important;
+}
