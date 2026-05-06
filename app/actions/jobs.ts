@@ -161,3 +161,31 @@ export async function deleteJob(id: string) {
   revalidatePath("/dashboard/jobs");
   return true;
 }
+
+export async function saveTailoredAssets(id: string, tailoredResumeHtml: string, coverLetterHtml: string, emailHtml: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const { error } = await supabase
+    .from("jobs")
+    .update({
+      tailored_resume: { html: tailoredResumeHtml },
+      cover_letter: coverLetterHtml,
+      cover_email: emailHtml,
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", id)
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Error saving tailored assets:", error);
+    throw new Error(error.message);
+  }
+
+  revalidatePath(`/dashboard/jobs/${id}`);
+  return true;
+}

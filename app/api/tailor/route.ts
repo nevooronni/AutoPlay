@@ -77,6 +77,7 @@ export async function POST(request: Request) {
       .update({
         tailored_resume: { html: object.tailored_resume_html },
         cover_letter: object.cover_letter_html,
+        cover_email: object.email_html,
         updated_at: new Date().toISOString(),
       })
       .eq("id", jobId);

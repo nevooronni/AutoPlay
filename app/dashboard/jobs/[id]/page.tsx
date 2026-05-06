@@ -111,12 +111,13 @@ export default async function JobPage({ params }: JobPageProps) {
       </div>
 
       <div className="mt-8 border-t border-slate-800 pt-8">
-        <h2 className="text-xl font-semibold text-slate-200 mb-6">AI generated CV and Cover Letter</h2>
+        <h2 className="text-xl font-semibold text-slate-200 mb-6">AI generated CV, Cover Letter and Email</h2>
         <TailoredAssetsReview 
           jobId={job.id}
           companyName={job.company}
           tailoredResumeHtml={job.tailored_resume ? (job.tailored_resume as any).html : null}
           coverLetterHtml={job.cover_letter}
+          emailHtml={job.cover_email}
         />
       </div>
     </div>
