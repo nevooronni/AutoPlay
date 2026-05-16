@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
-import { updateJobStatus, JobStatus } from "@/app/actions/jobs";
+import { updateJobStatus, deleteJob, JobStatus } from "@/app/actions/jobs";
 import { toast } from "sonner";
-import { Briefcase, MapPin, Calendar, ExternalLink, MoreVertical } from "lucide-react";
+import { Briefcase, MapPin, Calendar, ExternalLink, MoreVertical, Trash2, Edit } from "lucide-react";
 import Link from "next/link";
 import { Database } from "@/lib/supabase/database.types";
 
@@ -28,10 +28,42 @@ export default function KanbanBoard({ initialJobs }: KanbanBoardProps) {
   // We need to wait for mount to render DragDropContext to avoid hydration mismatch
   const [mounted, setMounted] = useState(false);
   const [jobs, setJobs] = useState<JobRow[]>(initialJobs);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    function handleClickOutside() {
+      if (activeDropdown) setActiveDropdown(null);
+    }
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [activeDropdown]);
+
+  const handleDelete = async (jobId: string) => {
+    if (confirm("Are you sure you want to delete this job application? This action cannot be undone.")) {
+      try {
+        await deleteJob(jobId);
+        toast.success("Job deleted successfully");
+        setJobs(jobs.filter((j) => j.id !== jobId));
+      } catch (error: any) {
+        toast.error(error.message || "Failed to delete job");
+      }
+    }
+    setActiveDropdown(null);
+  };
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const suffix = ['th', 'st', 'nd', 'rd'][(day > 3 && day < 21) || day % 10 > 3 ? 0 : day % 10];
+    const month = date.toLocaleDateString('en-US', { month: 'short' });
+    const year = date.getFullYear();
+    return `${day}${suffix} ${month} ${year}`;
+  };
 
   // Sync state if initialJobs changes
   useEffect(() => {
@@ -121,14 +153,46 @@ export default function KanbanBoard({ initialJobs }: KanbanBoardProps) {
                                 <Link href={`/dashboard/jobs/${job.id}`} className="font-medium text-slate-200 hover:text-indigo-400 transition-colors line-clamp-2 leading-tight">
                                   {job.title}
                                 </Link>
-                                <Link href={`/dashboard/jobs/${job.id}/edit`} className="text-slate-500 hover:text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity">
-                                  <MoreVertical className="h-4 w-4" />
-                                </Link>
+                                <div className="relative">
+                                  <button 
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      setActiveDropdown(activeDropdown === job.id ? null : job.id);
+                                    }}
+                                    className="text-slate-500 hover:text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  >
+                                    <MoreVertical className="h-4 w-4" />
+                                  </button>
+                                  {activeDropdown === job.id && (
+                                    <div className="absolute right-0 mt-1 w-32 bg-slate-800 border border-slate-700 rounded-lg shadow-xl z-50 overflow-hidden">
+                                      <Link href={`/dashboard/jobs/${job.id}/edit`} className="flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-slate-700 hover:text-white transition-colors">
+                                        <Edit className="h-3 w-3" /> Edit
+                                      </Link>
+                                      <button 
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          handleDelete(job.id);
+                                        }} 
+                                        className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-400 hover:bg-slate-700 hover:text-red-300 transition-colors"
+                                      >
+                                        <Trash2 className="h-3 w-3" /> Delete
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                               
-                              <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-3">
-                                <Briefcase className="h-3 w-3" />
-                                <span className="truncate">{job.company}</span>
+                              <div className="flex flex-col gap-1.5 text-xs text-slate-400 mb-3">
+                                <div className="flex items-center gap-1.5">
+                                  <Briefcase className="h-3 w-3" />
+                                  <span className="truncate">{job.company}</span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                  <Calendar className="h-3 w-3" />
+                                  <span>{formatDate(job.created_at)}</span>
+                                </div>
                               </div>
 
                               {(job.url || job.resumes?.title) && (

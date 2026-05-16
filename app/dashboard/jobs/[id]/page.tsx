@@ -29,10 +29,18 @@ export default async function JobPage({ params }: JobPageProps) {
     redirect("/dashboard/jobs");
   }
 
-  // Format the applied date if exists
-  const appliedDate = job.applied_at 
-    ? new Date(job.applied_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
-    : null;
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const suffix = ['th', 'st', 'nd', 'rd'][(day > 3 && day < 21) || day % 10 > 3 ? 0 : day % 10];
+    const month = date.toLocaleDateString('en-US', { month: 'short' });
+    const year = date.getFullYear();
+    return `${day}${suffix} ${month} ${year}`;
+  };
+
+  const appliedDate = formatDate(job.applied_at);
+  const createdDate = formatDate(job.created_at);
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -67,12 +75,10 @@ export default async function JobPage({ params }: JobPageProps) {
         </div>
         
         <div className="flex flex-wrap items-center gap-3 shrink-0 pt-2 md:pt-0 mt-2 md:mt-0">
-          {appliedDate && (
-            <div className="flex items-center gap-1.5 text-slate-300 text-sm mr-2 px-3 py-2 bg-slate-800/50 rounded-xl border border-slate-700/50 shadow-sm">
-              <Calendar className="h-4 w-4 text-indigo-400" />
-              <span className="font-medium">Applied {appliedDate}</span>
-            </div>
-          )}
+          <div className="flex items-center gap-1.5 text-slate-300 text-sm mr-2 px-3 py-2 bg-slate-800/50 rounded-xl border border-slate-700/50 shadow-sm">
+            <Calendar className="h-4 w-4 text-indigo-400" />
+            <span className="font-medium">{appliedDate ? `Applied ${appliedDate}` : `Added ${createdDate}`}</span>
+          </div>
           {job.url && (
             <a
               href={job.url}
