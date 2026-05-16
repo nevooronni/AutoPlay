@@ -35,13 +35,14 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Redirect unauthenticated users to login (except for public routes)
+  // Redirect unauthenticated users to login (except for public routes and webhooks)
   const publicRoutes = ["/login", "/signup", "/"];
   const isPublicRoute = publicRoutes.some(
     (route) => request.nextUrl.pathname === route
   );
+  const isWebhook = request.nextUrl.pathname.startsWith("/api/webhooks");
 
-  if (!user && !isPublicRoute) {
+  if (!user && !isPublicRoute && !isWebhook) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
